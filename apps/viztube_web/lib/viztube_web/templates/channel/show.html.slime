@@ -1,0 +1,34 @@
+.ui.one.column.grid
+  .row
+    .column
+      = if (length(@channel_tags) < 1 || Enum.find(@channel_tags, fn(t) -> t.name == "Untagged" end)) do
+        .detail
+          a.tag.right.floated id="tag-channel"
+            | Add a tag
+          .ui.divider
+        .ui.modal id="tag-channel"
+          .header Subscribe to channel
+          i.right.floated.red.window.close.icon
+          .content
+            = form_for @conn, channel_path(@conn, :add_tag, @channel_id), [method: "put", enforce_utf8: true, class: "ui mini form"], fn f ->
+              = select f, :tags, @user_tags, [class: "ui search dropown"]
+              = submit "Subscribe", name: "button", value: "search", class: "ui button mini blue"
+      - else
+        = Enum.map @channel_tags, fn(tag) ->
+          .ui.label.tag-item.tag
+            = link to: tag_path(@conn, :show, tag.id, %{"page" => 1}) do
+              = tag.name
+            end
+        .ui.divider
+  .row
+    .column
+      = if length(@videos.entries) > 0 do
+        .ui.divided.unstackable.items
+          = Enum.map @videos.entries, fn(video) ->
+            = render ViztubeWeb.SharedView, "video.html", video: video.data, conn: @conn, subscription: false
+
+          = pagination_links @conn, @videos, [@channel_id], path: &channel_path/4, action: :show
+
+      - else
+        .ui.segment
+          | There are no new videos on the channel from #{readable_date(@last_checked)}

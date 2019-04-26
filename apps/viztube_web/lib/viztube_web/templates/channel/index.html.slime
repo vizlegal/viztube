@@ -1,0 +1,66 @@
+.ui.one.column.grid
+  .row
+    .ui.vertical.divider
+      | Channels by Tag
+  .row
+    .column
+      table.ui.unstackable.very.basic.table
+        thead
+          tr
+            th Tag
+            th Channels
+            th Videos
+            th
+        tbody
+          = Enum.map @tags, fn(t) ->
+            tr
+              td
+                = link to: tag_path(@conn, :show, t.id, %{"page" => 1}) do
+                  = t.tag
+                end
+              td
+                = t.channels
+              td
+                = t.videos
+
+              td
+                = link to: tag_path(@conn, :delete_confirmation, t.tag), method: :get do
+                  i.remove.trash.icon.red
+                end
+
+  .row
+    .ui.vertical.divider
+      | Channels
+  .row
+    .column
+      table.ui.very.basic.table
+        thead
+          tr
+            th Channel name
+            th Tag
+            th Description
+            th Videos
+            th
+        tbody
+          = Enum.map @channels.entries, fn(channel) ->
+            tr
+              td
+                = link to: channel_path(@conn, :show, channel.id, %{"page" => 1}) do
+                  = channel.value.title
+                end
+              td
+                = Enum.map channel.tags, fn(t) ->
+                  .ui.label
+                    = t.name
+              td
+                = channel.value.description
+              td
+                = length(channel.resources)
+              td
+                = link to: channel_path(@conn, :delete_confirmation, channel.id), method: :get do
+                  i.remove.trash.icon.red
+                end
+  = if @channels.total_pages != 1 do
+    .row
+      .column
+        = pagination_links @conn, @channels, path: &channel_path/3, action: :index

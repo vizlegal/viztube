@@ -1,0 +1,14 @@
+.ui.modal.delete
+  .header Remove Subscription
+  .content
+    p Are you sure ?
+
+  .actions
+    .ui.green.button
+      = link to: channel_path(@conn, :delete, @id), method: :delete do
+        | Ok
+      end
+    .ui.red.button
+      = link to: channel_path(@conn, :index, %{"page" => 1}), method: :get do
+        | Cancel
+      end

@@ -1,0 +1,61 @@
+.ui.one.column.grid
+  .row
+    .column
+      = form_for @conn, page_path(@conn, :search, %{"page" => nil}), [as: :search, enforce_utf8: true, class: "ui form"], fn f ->
+        h4.ui.dividing.header Search Media
+        .fields
+          .nine.wide.field
+            = search_input f, :query, placeholder: "Search..."
+          .field
+            = select f, :order, ["By Date": "date", "By Relevance": "relevance", "By Views": "viewCount"]
+          .field
+            = select f, :duration, ["Any duration": "any", "Longer than 20 mins": "long", "Between 4 & 20 mins": "medium", "Less than 4 mins": "short"]
+          .field
+            = select f, :license, ["Any license": "any", "Creative Commons": "creativecommon", "Standard Youtube": "youtube"]
+          .field
+            = select f, :definition, ["Any definition": "any", "HD": "high", "Standard": "standard"]
+
+        #start_date.ui.form
+          .two.fields
+            .field
+              = label(f, :after, "Published After")
+              .ui.calendar#rangestart
+                .ui.input.left.icon
+                  i.calendar.icon
+                  = text_input f, :pub_after
+            .field
+              = label(f, :before, "Published Before")
+              .ui.calendar#rangeend
+                .ui.input.left.icon
+                  i.calendar.icon
+                  = text_input f, :pub_before
+
+        br
+
+        = submit "Search", name: "button", value: "search", class: "ui button blue"
+
+        = if assigns[:results] do
+          = submit "Save", name: "button", value: "save", class: "ui button green"
+
+  .row
+    .column
+      = if assigns[:results] do
+        .ui.divided.items
+          = Enum.map @results, fn(video) ->
+            = render ViztubeWeb.SharedView, "video.html", video: video, conn: @conn, subscription: true, user_tags: @user_tags
+
+
+        .ui.pagination.menu
+          = if @meta["prevPageToken"] do
+            = link to: page_path(@conn, :search, %{"search" => @form_data, "button" => "search", "page" => @meta["prevPageToken"]} ), method: :post, as: :search, enforce_utf8: true, class: "item" do
+              | << prev
+            end
+          - else
+            a.item.disabled << prev
+
+          = if @meta["nextPageToken"] do
+            = link to: page_path(@conn, :search, %{"search" => @form_data, "button" => "search", "page" => @meta["nextPageToken"]} ), method: :post, as: :search, enforce_utf8: true, class: "item" do
+              | next >>
+            end
+          - else
+              a.item.disabled >> next

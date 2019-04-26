@@ -1,0 +1,30 @@
+.ui.container.text
+  .ui.one.column.grid
+    .row
+      .column
+        h4.ui.dividing.header Users Management
+    .row
+      .column
+        i.dropdown.icon
+        | add a New User
+        = form_for @conn, user_path(@conn, :create), [as: :user, class: "ui large form"], fn f ->
+          .inline.fields
+            .ten.field
+              = text_input f, :email
+            .two.field
+              = submit "Add User", class: "ui orange submit button"
+    .row
+      .column
+        .ui.relaxed.divided.list
+          = if assigns[:users] do
+            = Enum.map @users.entries, fn(user) ->
+              .item
+                = user.email
+                .right.floated
+                  = link to: user_path(@conn, :delete_confirmation, user.id), method: :get do
+                    i.remove.user.icon.red
+                  end
+    = if @users.total_pages != 1 do
+      .row
+        .column
+          = pagination_links @conn, @users, path: &user_path/3, action: :index

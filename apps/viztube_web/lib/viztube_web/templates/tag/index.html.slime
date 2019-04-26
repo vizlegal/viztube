@@ -1,0 +1,57 @@
+.ui.one.column.grid
+  .row
+    .column
+      table.ui.unstackable.very.basic.table
+        thead
+          tr
+            th Tag
+            th Channels
+            th
+        tbody
+          = Enum.map @tags, fn(t) ->
+            tr
+              td
+                = link to: tag_path(@conn, :show, t.id) do
+                  = t.tag
+                end
+              td
+                = t.channels
+              td
+                / = link to: tags_path(@conn, :delete_confirmation, t.id), method: :get do
+                i.remove.trash.icon.red
+                / end
+
+  .row
+    .ui.vertical.divider
+      | Channels
+  .row
+    .column
+      table.ui.unstackable.very.basic.table
+        thead
+          tr
+            th Channel name
+            th Tag
+            th Subscription since
+            th Description
+            th New Videos
+            th
+        tbody
+          = Enum.map @channels, fn(ch) ->
+            tr
+              td
+                = link to: channel_path(@conn, :show, ch.id) do
+                  = ch.value.title
+                end
+              td
+                = Enum.map ch.tags, fn(t) ->
+                  = t.name
+              td
+                = Timex.format!(ch.last_checked, "%F %T", :strftime)
+              td
+                = ch.value.description
+              td
+                = ch.value.videos
+              td
+                = link to: channel_path(@conn, :delete_confirmation, ch.id), method: :get do
+                  i.remove.trash.icon.red
+                end

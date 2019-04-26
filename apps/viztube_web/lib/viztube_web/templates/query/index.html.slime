@@ -1,0 +1,52 @@
+.ui.one.column.grid
+  .row
+    .column
+      table.ui.unstackable.very.basic.table#queries-list data-id="#{@current_user.id}"
+        thead
+          tr
+            th
+              | Query
+            th
+              | Last update ago
+            th
+              | Created at
+            th
+              | Order
+            th
+              | License
+            th
+              | Definition
+            th
+              | Duration
+            th
+              | Videos
+            th
+        tbody
+          = Enum.map @saved_searches.entries, fn(query) ->
+            tr id="#{query.id}" data-date="#{query.last_checked}"
+              td
+                = link to: query_path(@conn, :show, query.id, %{"page" => 1}) do
+                  = query.value.query
+                end
+              td.last-checked
+                = time_ago(query.last_checked)
+              td
+                = readable_date(query.inserted_at)
+              td
+                = query.value.order
+              td
+                = query.value.license
+              td
+                = query.value.definition
+              td
+                = query.value.duration
+              td.videos
+                = query.videos
+              td
+                = link to: query_path(@conn, :delete_confirmation, query.id), method: :get do
+                  i.remove.trash.icon.red
+                end
+  = if @saved_searches.total_pages != 1 do
+    .row
+      .column
+        = pagination_links @conn, @saved_searches, path: &query_path/3, action: :index

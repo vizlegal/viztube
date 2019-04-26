@@ -1,0 +1,16 @@
+/* This file is for your main application css. */
+.holder {
+  height: 400px;
+}
+.holder .middle {
+  height: 100%;
+}
+
+.ui.embed > .video.play.icon:before {
+  font-size: 3rem;
+}
+
+.ui.label.tag-item {
+  margin-bottom: 0.5rem;
+}
+@import './calendar.min';

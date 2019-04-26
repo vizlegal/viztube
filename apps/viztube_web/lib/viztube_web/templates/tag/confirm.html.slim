@@ -1,0 +1,15 @@
+.ui.modal.delete
+  .header Remove Tag
+  .content
+    p This action only remove this Tag and associations but the channels with it videos remain
+    p Are you sure ?
+
+  .actions
+    .ui.green.button
+      = link to: tag_path(@conn, :delete, @tag), method: :delete do
+        | Ok
+      end
+    .ui.red.button
+      = link to: channel_path(@conn, :index), method: :get do
+        | Cancel
+      end

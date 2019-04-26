@@ -1,0 +1,32 @@
+version: '3'
+
+volumes:
+  vlpg-vol:
+
+services:
+  postgres:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    volumes:
+      - vlpg-vol:/var/lib/postgresql/data
+
+  viztube:
+    image: viztube:dev-201807
+    # command: test
+    volumes:
+      - .:/app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    ports:
+      - "3000:3000"
+    links:
+      - "postgres"
+    depends_on:
+      - postgres
+    environment:
+      - MIX_ENV=dev
+      - DB_HOSTNAME=postgres
+      - LOCAL_DEV="true"
+      - VERBOSE="true"

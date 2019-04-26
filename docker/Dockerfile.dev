@@ -1,0 +1,54 @@
+# Don't use this image for production, it contains dev & test utils and is not hardened
+FROM bitnami/minideb:stretch
+LABEL vendor="vizlegal"
+
+# $HEX_HOME is where deps are cached, we move it out of $APP so is nto overwritten in dev
+ENV HOME=/app APP=/app HEX_HOME=/deps/hex MIX_HOME=/deps/mix \
+  DEV_PACKAGES="git build-essential automake cmake inotify-tools curl apt-transport-https bash ca-certificates locales make python-dev" \
+  PACKAGES="libncurses5 openssl libssl1.0.2" \
+  MIX_ENV="dev"
+
+### Install elixir ###
+RUN install_packages $DEV_PACKAGES && \
+  locale-gen C.UTF-8 && \
+  update-locale LANG=C.UTF-8
+ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8 \
+  EXS_VERSION=1.5.3
+RUN install_packages gnupg \
+  && curl -O https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
+	&& dpkg -i erlang-solutions_1.0_all.deb \
+	&& rm erlang-solutions_1.0_all.deb
+RUN install_packages erlang-base erlang-dev erlang-syntax-tools erlang-parsetools erlang-ssl erlang-inets
+RUN curl https://codeload.github.com/elixir-lang/elixir/tar.gz/v$EXS_VERSION -o "elixir-$EXS_VERSION.tar.gz" \
+	&& tar xzvf elixir-$EXS_VERSION.tar.gz \
+	&& cd elixir-$EXS_VERSION \
+	&& make clean compile install \
+	&& cd .. \
+	&& rm -rf elixir*
+######################
+### Install nodejs & yarn #####
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+  install_packages nodejs yarn
+######################
+
+RUN mkdir -p $APP && mkdir -p $HEX_HOME $MIX_HOME && \
+  install_packages $PACKAGES && \
+  mix do local.hex --force, local.rebar --force
+
+# Cache elixir deps
+COPY config/ $APP/config/
+COPY mix.exs mix.lock $APP/
+COPY apps/viztube/config/ $APP/apps/viztube/config/
+COPY apps/viztube/mix.exs $APP/apps/viztube/
+COPY apps/viztube_web/config/ $APP/apps/viztube_web/config/
+COPY apps/viztube_web/mix.exs $APP/apps/viztube_web/
+
+WORKDIR $APP
+RUN mix do deps.clean --all, deps.get
+
+EXPOSE 4000
+
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,78 @@
+.item.ui.stackable.grid
+  .row
+    .six.wide.column
+      .ui.fluid.large.image
+        .ui.embed.centered data-source="youtube" data-id="#{@video.video_id}" data-placeholder="#{@video.thumbnails["high"]["url"]}"
+    .ten.wide.column.video-data id="video-#{@video.video_id}"
+      .content
+        .ui.grid
+          .row
+            .ten.wide.column
+              a.header href="https://www.youtube.com/watch?v=#{@video.video_id}" target="_blank"= @video.title
+            .six.wide.column
+              a.metadata.right.floated id="#{@video.video_id}"
+                | Show video metadata
+            .ui.modal id="#{@video.video_id}"
+              .header Video Meta Data
+              i.right.floated.red.window.close.icon
+              .scrolling.content
+                pre
+                  = Poison.encode!(@video, pretty: true)
+          .row
+            .eleven.wide.column
+              | Uploaded at #{readable_date(@video.published_at)}
+            .five.wide.column
+              .ui.right.floated id="duration-#{@video.video_id}"
+                | Video duration:
+                .ui.active.inline.mini.loader
+          .row
+            .eight.wide.column
+              .item
+                .ui.black.label
+                    a href="https://www.youtube.com/channel/#{@video.channel_id}" target="_blank"= @video.channel_title
+                    = if @subscription do
+                      .detail
+                        a.tag.right.floated id="taglink-#{@video.video_id}"
+                          | Subscribe
+                        .ui.modal id="tagmodal-#{@video.video_id}"
+                          .header Subscribe to channel
+                          i.right.floated.red.window.close.icon
+                          .content.ui.grid style="background:transparent;"
+                            .row.two.column
+                              .column
+                                .description Add a new tag for this channel or select one
+                              .column
+                                = form_for @conn, channel_path(@conn, :create, %{"channel_id" => @video.channel_id}), [method: "post", enforce_utf8: true, class: "ui mini form"], fn f ->
+                                  = select f, :tags, @user_tags, [class: "ui search dropdown"]
+                                  / = select f, :tags, [[value: "", key: "none"], [value: "uno", key: "uno"], [value: "dos", key: "dos"]], [class: "ui search dropown"]
+
+                                  .ui.divider
+                                  = submit "Subscribe", name: "button", value: "subscribe", class: "ui mini positive button right floated"
+            .eight.wide.column.right.floated
+              .ui.horizontal.list.right.floated
+                .item
+                  .ui.orange.image.label id="viewCount-#{@video.video_id}"
+                    .ui.active.inline.mini.loader
+                    .detail views
+                .item
+                  .ui.blue.image.label id="commentCount-#{@video.video_id}"
+                    .ui.active.inline.mini.loader
+                    .detail comments
+                .item id="location-#{@video.video_id}"
+                  i.icon.large.world.disabled.grey
+          .row
+            .sixteen.wide.column
+              .description.left.floated
+                p= @video.description
+  .row
+    .column
+      .ui.accordion
+        .ui.title
+          i.dropdown.icon
+          | Thumbnails
+        .ui.content
+          .ui.small.images
+            = Enum.map [0,1,2,3], fn(thumb) ->
+              a.item href="https://www.google.com/searchbyimage?image_url=http://img.youtube.com/vi/#{@video.video_id}/#{thumb}.jpg" target="_blank"
+                img src="http://img.youtube.com/vi/#{@video.video_id}/#{thumb}.jpg"
+          p Click on image for Google image search

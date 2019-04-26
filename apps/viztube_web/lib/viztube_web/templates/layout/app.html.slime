@@ -1,0 +1,62 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta content="IE=edge" http-equiv="X-UA-Compatible"
+    meta content="width=device-width, initial-scale=1" name="viewport"
+    meta content="" name="description"
+    meta content="" name="author"
+    title viztube
+    link rel="stylesheet" href="#{static_path(@conn, "/css/app.css")}"
+
+  body
+    = if @current_user && @current_user.admin do
+      .ui.pointing.menu
+        = active_link @conn, "Home", to: "/", class: "item"
+        = active_link @conn, "Users", to: "/users?page=1", class: "item"
+        = active_link @conn, "Searches", to: "/queries?page=1", class: "item"
+        = active_link @conn, "Channels", to: "/channels?page=1", class: "item"
+        = link to: "/sessions", method: :delete, class: "item right" do
+          | Log Out
+        end
+    = if @current_user && @current_user.admin == false do
+      .ui.pointing.menu
+        = active_link @conn, "Home", to: "/", class: "item"
+        = active_link @conn, "Searches", to: "/queries?page=1", class: "item"
+        = active_link @conn, "Channels", to: "/channels?page=1", class: "item"
+        = link to: "/sessions", method: :delete, class: "item right" do
+          | Log Out
+        end
+
+    /.ui.two.column.grid
+      .three.wide.column
+        .ui.vertical.menu.fluid
+          a.active.teal.item
+            span Inbox
+            .ui.teal.left.pointing.label 1
+          a.item
+            span Spam
+            .ui.label 51
+          a.item
+            span Updates
+            .ui.label 1
+          /.item
+          /  .ui.transparent.icon.input
+          /    input placeholder="Search mail..." type="text"
+          /    i.search.icon
+
+      /.thirteen.wide.centered.column
+
+    .ui.container
+      main.ui.main role="main"
+        = if get_flash(@conn, :info) do
+          p.ui.green.message role="alert"
+            = get_flash(@conn, :info)
+        = if get_flash(@conn, :error) do
+          p.ui.red.message role="alert"
+            = get_flash(@conn, :error)
+
+        = render @view_module, @view_template, assigns
+
+    script src="#{static_path(@conn, "/js/app.js")}"
+    = render_existing @view_module, "scripts.html", assigns

@@ -1,0 +1,16 @@
+.ui.one.column.grid
+  .row
+    .column
+      .ui.segments
+        .ui.horizontal.segments
+          .ui.segment
+            p
+              b Total Videos:
+              = @results.total_entries
+      .ui.divided.unstackable.items
+        = Enum.map @results.entries, fn(video) ->
+          = render ViztubeWeb.SharedView, "video.html", video: video.value, user_tags: @user_tags, subscription: true, conn: @conn
+  = if @results.total_pages != 1 do
+    .row
+      .column
+        = pagination_links @conn, @results, [@search_id], path: &query_path/4, action: :show

@@ -1,0 +1,16 @@
+.DS_Store
+.git
+.gitignore
+tags*
+Session.vim
+chart
+
+/_build
+/.mix
+/db
+/deps
+/*.ez
+*.dump
+/priv/static/
+apps/viztube_web/assets/node_modules
+apps/viztube_web/priv/static/

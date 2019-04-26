@@ -1,0 +1,14 @@
+.ui.modal#user
+  .header Delete User
+  .content
+    p Are you sure ?
+
+  .actions
+    .ui.green.button
+      = link to: user_path(@conn, :delete, @id), method: :delete do
+        | Ok
+      end
+    .ui.red.button
+      = link to: user_path(@conn, :index), method: :get do
+        | Cancel
+      end

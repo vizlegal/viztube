@@ -1,0 +1,5 @@
+| Here is your login link:
+p
+  = signin_url(URI.parse(System.get_env("EXT_HOST")), :show, @token)
+p
+  | It is valid for 30 minutes.

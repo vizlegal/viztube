@@ -1,0 +1,24 @@
+.ui.one.column.grid
+  .row
+    .column
+      .ui.header = @tag.name
+  .row
+    .column
+      .ui.divided.unstackable.items
+        = Enum.map @tag.channels, fn(channel) ->
+          .ui.label.tag-item
+            = link to: channel_path(@conn, :show, channel.id, %{"page" => 1}) do
+              = channel.value.title
+            end
+            = if @tag.name != "Untagged" do
+              = link to: tag_path(@conn, :delete_tag, @tag.id, channel.id), method: :post do
+                i.delete.icon.red
+              end
+            end
+      .ui.divider
+  .row
+    .column
+      .ui.divided.unstackable.items
+          = Enum.map @videos.entries, fn(video) ->
+            = render ViztubeWeb.SharedView, "video.html", video: video.data, conn: @conn, subscription: false
+          = pagination_links @conn, @videos, [@tag.id], path: &tag_path/4, action: :show
