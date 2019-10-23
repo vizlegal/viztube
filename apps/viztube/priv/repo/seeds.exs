@@ -10,4 +10,4 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-Viztube.Accounts.create_user(%{email: "admin@local.vl", admin: true})
+Viztube.Accounts.create_user(%{email: "admin@local.vl", admin: true, tags: ""})

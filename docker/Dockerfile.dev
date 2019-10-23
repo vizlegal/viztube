@@ -15,9 +15,10 @@ RUN install_packages $DEV_PACKAGES && \
 ENV LANG=C.UTF-8 LANGUAGE=C.UTF-8 LC_ALL=C.UTF-8 \
   EXS_VERSION=1.5.3
 RUN install_packages gnupg \
-  && curl -O https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb \
-	&& dpkg -i erlang-solutions_1.0_all.deb \
-	&& rm erlang-solutions_1.0_all.deb
+  && curl https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc | apt-key add - \
+  && echo "deb https://dl.bintray.com/rabbitmq-erlang/debian stretch erlang-20.x" | tee /etc/apt/sources.list.d/bintray.rabbitmq.list
+RUN apt-get update
+
 RUN install_packages erlang-base erlang-dev erlang-syntax-tools erlang-parsetools erlang-ssl erlang-inets
 RUN curl https://codeload.github.com/elixir-lang/elixir/tar.gz/v$EXS_VERSION -o "elixir-$EXS_VERSION.tar.gz" \
 	&& tar xzvf elixir-$EXS_VERSION.tar.gz \

@@ -12,15 +12,12 @@ services:
       - vlpg-vol:/var/lib/postgresql/data
 
   viztube:
-    image: viztube:dev-201807
-    # command: test
+    image: vizlegal/viztube:dev-201910
+    command: server
     volumes:
       - .:/app
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile.dev
     ports:
-      - "3000:3000"
+      - "3000:4000"
     links:
       - "postgres"
     depends_on:
@@ -28,5 +25,7 @@ services:
     environment:
       - MIX_ENV=dev
       - DB_HOSTNAME=postgres
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+      - GUARDIAN_SECRET_KEY=${GUARDIAN_SECRET_KEY}
       - LOCAL_DEV="true"
       - VERBOSE="true"

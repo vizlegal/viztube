@@ -1,5 +1,6 @@
 # FROM elixir:1.5-alpine as asset-builder-mix-getter
-FROM gl.vizlegal.io:4567/labext/viztube:dev-201807 as builder
+FROM vizlegal/viztube:dev-201910 AS builder
+
 LABEL vendor="vizlegal"
 
 ENV HOME=/app APP=/app HEX_HOME=/deps/hex MIX_HOME=/deps/mix \
@@ -47,9 +48,7 @@ ENV LANG=C.UTF-8 \
     HOME=/app/ APP=/app/ \
     TERM=xterm
 
-
 ENV VIZTUBE_VERSION=0.2.0
-
 
 RUN install_packages locales && \
   locale-gen C.UTF-8 && \

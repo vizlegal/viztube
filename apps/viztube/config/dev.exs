@@ -10,4 +10,4 @@ config :viztube, Viztube.Repo,
   pool_size: 10
 
 config :tub_ex, TubEx,
-  api_key: "myapikey"
+  api_key: "${YT_API_KEY}"

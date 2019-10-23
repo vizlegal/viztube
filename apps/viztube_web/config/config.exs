@@ -13,7 +13,7 @@ config :viztube_web,
 # Configures the endpoint
 config :viztube_web, ViztubeWeb.Endpoint,
   # url: [host: "localhost"],
-  secret_key_base: "mykeybase",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: ViztubeWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ViztubeWeb.PubSub,
            adapter: Phoenix.PubSub.PG2]
@@ -45,17 +45,17 @@ config :viztube_web, ViztubeWeb.Guardian,
   verify_module: Guardian.JWT,
   ttl: { 30, :days },
   verify_issuer: false,
-  secret_key: "mysecretkey",
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY"),
   serializer: ViztubeWeb.GuardianSerializer
 
 config :viztube_web, ViztubeWeb.Mailer,
   # adapter: Bamboo.LocalAdapter
   adapter: Bamboo.SMTPAdapter,
-  server: {:system, "SMTP_HOSTNAME"},
-  hostname: {:system, "SMTP_HOSTNAME"},
+  server: System.get_env("SMTP_HOSTNAME"),
+  hostname: System.get_env("SMTP_HOSTNAME"),
   port: 465,
-  username: {:system, "SMTP_USERNAME"},
-  password: {:system, "SMTP_PASSWORD"},
+  username: System.get_env("SMTP_USERNAME"),
+  password: System.get_env("SMTP_PASSWORD"),
   tls: :if_available, # can be `:always` or `:never`
   allowed_tls_versions: [:"tlsv1", :"tlsv1.1", :"tlsv1.2"], # or {":system", ALLOWED_TLS_VERSIONS"} w/ comma seprated values (e.g. "tlsv1.1,tlsv1.2")
   ssl: true,
