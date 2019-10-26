@@ -9,6 +9,6 @@
         | Ok
       end
     .ui.red.button
-      = link to: user_path(@conn, :index), method: :get do
+      = link to: user_path(@conn, :index, %{"page" => 1}), method: :get, class: "wi white" do
         | Cancel
       end

@@ -1,5 +1,5 @@
 # FROM elixir:1.5-alpine as asset-builder-mix-getter
-FROM vizlegal/viztube:dev-201910 AS builder
+FROM vizlegal/viztube:dev-2019.10.25-r2 AS builder
 
 LABEL vendor="vizlegal"
 

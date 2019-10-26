@@ -29,29 +29,51 @@ We are using Distillery & Docker multi-stage.
 
 It can be tested with:
 
-    docker run -it --rm -p 4000:4000 -e "HOST=localhost" -e "SECRET_KEY_BASE=MPyVFpBIthyGt1ZsfsCgvF0z32RHe3jFulOx2lkjq0L5M9/AIqexgcVnQe5OUyeM" -e "DB_USERNAME=postgres" -e "DB_PASSWORD=postgres" -e "DB_NAME=viztube_dev" -e "DB_HOSTNAME=172.17.0.1" viztube:release /app/bin/viztube_umbrella foreground
-
-Helm is used for deployment to prod.
+       docker run -it --rm -p 4000:4000 -e "HOST=localhost" -e "SECRET_KEY_BASE=MPyVFpBIthyGt1ZsfsCgvF0z32RHe3jFulOx2lkjq0L5M9/AIqexgcVnQe5OUyeM" -e "DB_USERNAME=postgres" -e "DB_PASSWORD=postgres" -e "DB_NAME=viztube_dev" -e "DB_HOSTNAME=172.17.0.1" viztube:release /app/bin/viztube_umbrella foreground
 
 ## Environment variables
 
 You must to set:
 
-$SECRET_KEY_BASE in order to generate secrets. This can be generated using `mix phx.gen.secret`
+``$SECRET_KEY_BASE`` in order to generate secrets. This can be generated using `mix phx.gen.secret`
 
-$GUARDIAN_SECRET_KEY Secret key for authentication. This can be generated using `mix guardian.gen.secret`
+``$GUARDIAN_SECRET_KEY`` Secret key for authentication. This can be generated using `mix guardian.gen.secret`
 
 ### Email login link
 
 You should set:
 
-$SMTP_USERNAME, $SMTP_PASSWORD, $SMTP_HOSTNAME, environment variable for smtp server configuration.
+``$SMTP_USERNAME``, ``$SMTP_PASSWORD``, ``$SMTP_HOSTNAME``, environment variable for smtp server configuration.
 
-$EXT_HOST environment variable for %URL{} struct in login link
+``$EXT_HOST`` environment variable for %URL{} struct in login link
 
 ### Youtube
 
-$YT_API_KEY is the youtube api key
+``$YT_API_KEY`` is the youtube api key
+## Deploy
+
+Helm is used for deployment to prod.
+A deployment is identify by chart/viztube/viztube-deployment.yaml where file name will be a k8s namespace
+
+you need to store secrets in k8s namespace.
+
+
+    db-hostname
+    db-username
+    db-password
+    db-name
+    secret-key-base
+    guardian-secret-key
+    smtp-hostname
+    smtp-username
+    smtp-password
+    yt-api-key
+
+
+then
+
+    helm install --name=viztube-deployment --debug --wait --namespace=viztube-deployment -f chart/viztube/viztube-deployment.yaml chart/viztube
+
 
 ## License
 

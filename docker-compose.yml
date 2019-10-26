@@ -12,7 +12,7 @@ services:
       - vlpg-vol:/var/lib/postgresql/data
 
   viztube:
-    image: vizlegal/viztube:dev-201910
+    image: vizlegal/viztube:dev-2019.10.25-r2
     command: server
     volumes:
       - .:/app

@@ -22,13 +22,13 @@
               .ui.calendar#rangestart
                 .ui.input.left.icon
                   i.calendar.icon
-                  = text_input f, :pub_after
+                  = text_input f, :pub_after, [autocomplete: "off"]
             .field
               = label(f, :before, "Published Before")
               .ui.calendar#rangeend
                 .ui.input.left.icon
                   i.calendar.icon
-                  = text_input f, :pub_before
+                  = text_input f, :pub_before, [autocomplete: "off"]
 
         br
 

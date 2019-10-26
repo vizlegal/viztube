@@ -19,7 +19,10 @@ import "./semantic.min"
 window.onload = function(){
   $('.ui.embed').embed();
   $('.ui.accordion').accordion();
-  $('.ui.modal#user').modal().modal('show');
+  $('.ui.modal#user').modal({
+    blurring: true,
+    closable: false
+  }).modal('show');
 
   $('.ui.search.dropdown').dropdown({
     allowAdditions: true
@@ -130,7 +133,10 @@ $('a.tag').click(function(e) {
 })
 
 $('.ui.modal.delete')
-  .modal()
+  .modal({
+    blurring: true,
+    closable: false
+  })
   .modal('show');
 
 // Import local files

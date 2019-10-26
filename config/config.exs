@@ -15,7 +15,7 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :sentry,
-  dsn: "",
+  dsn: {:system, "SENTRY_DSN"} || "${SENTRY_DSN}",
   environment_name: Mix.env,
   included_environments: [:prod],
   enable_source_code_context: false,
